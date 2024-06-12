@@ -66,27 +66,15 @@ public class TaskManager {
     }
 
     public Status epicStatus(Epic epic) {
-        int newStatus = 0;
-        int done = 0;
+        ArrayList<Status> statusList = new ArrayList<>();
         for (Subtask subtask : epic.getSubtaskList().values()) {
-
-            switch (subtask.getStatus()) {
-                case NEW:
-
-                    newStatus++;
-                    break;
-                case DONE:
-
-                    done++;
-                    break;
+            if (!statusList.contains(subtask.getStatus())) {
+                statusList.add(subtask.getStatus());
             }
-
-            if (newStatus == epic.getSubtaskList().size() || epic.getSubtaskList().isEmpty()) {
-                epic.setStatus(Status.NEW);
-            } else if (done == epic.getSubtaskList().size()) {
-                epic.setStatus(Status.DONE);
-            } else epic.setStatus(Status.IN_PROGRESS);
         }
+        if (statusList.size() != 1) {
+            epic.setStatus(Status.IN_PROGRESS);
+        } else epic.setStatus(statusList.get(0));
 
 
         return epic.getStatus();

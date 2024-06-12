@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Epic extends Task {
-    Map<Integer,Subtask> subtaskList= new HashMap<>();
+   protected Map<Integer,Subtask> subtaskList= new HashMap<>();
 
 
     public Epic(String name, String description, Status status) {
