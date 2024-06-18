@@ -1,3 +1,6 @@
+import manager.HistoryManager;
+import manager.InMemoryHistoryManager;
+import manager.Managers;
 import manager.TaskManager;
 import task.Epic;
 import task.Status;
@@ -7,9 +10,9 @@ import task.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
-        Task task1 = new Task("Мытьё посуды", "Вымыть всю грязную посуду", Status.NEW);
-        Task task2 = new Task("Стирка", "Постирать грязные вещи", Status.NEW);
+        TaskManager taskManager = Managers.getDefault();
+        /*Task task1 = new Task(2,"Мытьё посуды", "Вымыть всю грязную посуду", Status.NEW);
+        Task task2 = new Task(1,"Стирка", "Постирать грязные вещи", Status.NEW);
         Epic epic1 = new Epic("Покупка продуктов", "Сходить в магазин и купить продукты", Status.NEW);
         Epic epic2 = new Epic("Уход за цветами", "Полить цветы", Status.NEW);
         Subtask subtask1 = new Subtask("Список покупок", "Составить список покупок", Status.NEW, epic1);
@@ -44,11 +47,16 @@ public class Main {
         System.out.println(taskManager.getTasks());
         System.out.println(taskManager.getEpics());
         System.out.println(taskManager.getSubtasks());
-
-
-
-
-
+        System.out.println("История просмотра задач");
+        taskManager.getTasks();
+        System.out.println(taskManager.getHistoryManager());*/
+        Task task1 = new Task("Мытьё посуды", "Вымыть всю грязную посуду", Status.NEW);
+        taskManager.createTask(task1);
+        taskManager.getTasks();
+        Task task2 = new Task(1, "sad","asd",Status.IN_PROGRESS);
+taskManager.updateTask(task2);
+taskManager.getTasks();
+        System.out.println(taskManager.getHistoryManager());
 
     }
 
