@@ -26,7 +26,7 @@ class InMemoryHistoryManagerTest {
         taskManager.updateTask(task2);
         taskManager.getTask(1);
         historyList.add(task2);
-        assertEquals(taskManager.getHistoryManager(), historyList);
+        assertEquals(taskManager.getHistory(), historyList);
 
 
     }

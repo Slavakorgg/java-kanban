@@ -1,7 +1,4 @@
-import manager.HistoryManager;
-import manager.InMemoryHistoryManager;
-import manager.Managers;
-import manager.TaskManager;
+import manager.*;
 import task.Epic;
 import task.Status;
 import task.Subtask;
@@ -49,7 +46,11 @@ public class Main {
         System.out.println(taskManager.getSubtasks());
         System.out.println("История просмотра задач");
         taskManager.getTasks();
-        System.out.println(taskManager.getHistoryManager());
+        System.out.println(taskManager.getHistory().size());
+        System.out.println(taskManager.getHistory());
+
+
+
 
 
     }

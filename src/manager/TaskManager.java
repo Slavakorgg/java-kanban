@@ -18,7 +18,7 @@ public interface TaskManager{
 
     List<Task> getEpics();
 
-    public List<Task> getHistoryManager();
+    List<Task> getHistory();
 
     Task getTask(int taskId);
 
