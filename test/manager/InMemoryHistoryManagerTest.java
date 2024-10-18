@@ -2,7 +2,7 @@ package manager;
 
 import org.junit.jupiter.api.Test;
 import task.Status;
-import task.Subtask;
+
 import task.Task;
 
 
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
     TaskManager taskManager = Managers.getDefault();
-    // HistoryManager historyManager = Managers.getDefaultHistory();
+
 
     @Test
     void HistoryManagerTest() {
