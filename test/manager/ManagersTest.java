@@ -21,11 +21,12 @@ public class ManagersTest {
 
 
     }
+
     @Test
-    void historyManagerTest(){
+    void historyManagerTest() {
         HistoryManager historyManager = Managers.getDefaultHistory();
         assertNotNull(historyManager.getTasks());
-        assertEquals(historyManager.getTasks().size(),0);
+        assertEquals(historyManager.getTasks().size(), 0);
 
     }
 }

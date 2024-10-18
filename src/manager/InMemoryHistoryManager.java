@@ -71,23 +71,18 @@ public class InMemoryHistoryManager implements HistoryManager {
             setFirst(getFirst().getNext());
             node.setNext(null);
 
-        } else if (getLast() == node ) {
-            if (node.getPrevious() == getFirst()){
+        } else if (getLast() == node) {
+            if (node.getPrevious() == getFirst()) {
                 getLast().setPrevious(null);
                 getFirst().setNext(null);
                 setLast(getFirst());
-            }
-            else  {
+            } else {
                 Node newLastNode = node.getPrevious();
                 remove(node.getPrevious().getValue().getId());
                 setLast(newLastNode);
                 node.setNext(null);
                 node.setPrevious(null);
             }
-
-
-
-
 
 
         } else {
@@ -103,7 +98,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getTasks() {
         ArrayList<Task> result = new ArrayList<>();
-        if (!history.isEmpty()){
+        if (!history.isEmpty()) {
             Node currentNode = getFirst();
             while (currentNode.getNext() != null) {
                 result.add(currentNode.getValue());
@@ -114,9 +109,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         return result;
     }
 
-    public void linkLast(Node node){
+    public void linkLast(Node node) {
 
-        if (getLast()!=null){
+        if (getLast() != null) {
             getLast().setNext(node);
             node.setPrevious(getLast());
         }
@@ -124,10 +119,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (history.isEmpty()) setFirst(node);
 
 
-
     }
 
-    static class Node{
+    static class Node {
         Node previous;
         Node next;
         Task value;
@@ -157,10 +151,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             return value;
         }
     }
-
-
-
-
 
 
 }

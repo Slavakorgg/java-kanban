@@ -170,7 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!tasks.containsKey(taskId)) {
             return false;
         }
-        if (historyManager.getTasks().contains(tasks.get(taskId))){
+        if (historyManager.getTasks().contains(tasks.get(taskId))) {
             historyManager.remove(taskId);
         }
         tasks.remove(taskId);
@@ -183,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!subtasks.containsKey(taskId)) {
             return false;
         }
-        if (historyManager.getTasks().contains(subtasks.get(taskId))){
+        if (historyManager.getTasks().contains(subtasks.get(taskId))) {
             historyManager.remove(taskId);
         }
 
@@ -202,7 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
             //   historyManager.remove(taskId);
             deleteSubtask(subtask.getId());
         }
-        if (historyManager.getTasks().contains(epics.get(taskId))){
+        if (historyManager.getTasks().contains(epics.get(taskId))) {
             historyManager.remove(taskId);
         }
         epics.remove(taskId);

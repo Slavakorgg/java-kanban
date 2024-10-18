@@ -19,10 +19,10 @@ class InMemoryHistoryManagerTest {
     @Test
     void HistoryManagerTest() {
         List<Task> historyList = new ArrayList<>();
-        Task task1 = new Task(1,"Task1", "1-1",Status.NEW);
-        Task task2 = new Task(2,"Task 2","2-1",Status.NEW);
-        Task task3 = new Task(3,"Task 3", "3-1",Status.NEW);
-        Task task4 = new Task(4,"Task 4", "4-1",Status.NEW);
+        Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
+        Task task3 = new Task(3, "Task 3", "3-1", Status.NEW);
+        Task task4 = new Task(4, "Task 4", "4-1", Status.NEW);
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
@@ -32,54 +32,54 @@ class InMemoryHistoryManagerTest {
         historyList.add(task2);
         historyList.add(task3);
         historyList.add(task4);
-        assertEquals(historyList,taskManager.getHistory());
+        assertEquals(historyList, taskManager.getHistory());
 
 
     }
 
     @Test
-    void HistoryManagerSizeTest(){
-        Task task1 = new Task(1,"Task1", "1-1",Status.NEW);
-        Task task2 = new Task(2,"Task 2","2-1",Status.NEW);
+    void HistoryManagerSizeTest() {
+        Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.getTask(1);
         taskManager.getTask(1);
         taskManager.getTask(2);
         taskManager.getTasks();
-        assertEquals(taskManager.getHistory().size(),2);
+        assertEquals(taskManager.getHistory().size(), 2);
     }
 
     @Test
-    void LastTaskTest(){
-        Task task1 = new Task(1,"Task1", "1-1",Status.NEW);
-        Task task2 = new Task(2,"Task 2","2-1",Status.NEW);
-        Task task3 = new Task(3,"Task 3", "3-1",Status.NEW);
-        Task task4 = new Task(4,"Task 4", "4-1",Status.NEW);
+    void LastTaskTest() {
+        Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
+        Task task3 = new Task(3, "Task 3", "3-1", Status.NEW);
+        Task task4 = new Task(4, "Task 4", "4-1", Status.NEW);
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
         taskManager.createTask(task4);
         taskManager.getTasks();
         taskManager.getTask(1);
-        assertEquals(taskManager.getHistory().get(3),task1);
+        assertEquals(taskManager.getHistory().get(3), task1);
 
     }
+
     @Test
-    void FirstTaskTest(){
-        Task task1 = new Task(1,"Task1", "1-1",Status.NEW);
-        Task task2 = new Task(2,"Task 2","2-1",Status.NEW);
-        Task task3 = new Task(3,"Task 3", "3-1",Status.NEW);
-        Task task4 = new Task(4,"Task 4", "4-1",Status.NEW);
+    void FirstTaskTest() {
+        Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
+        Task task3 = new Task(3, "Task 3", "3-1", Status.NEW);
+        Task task4 = new Task(4, "Task 4", "4-1", Status.NEW);
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
         taskManager.createTask(task4);
         taskManager.getTasks();
         taskManager.getTask(1);
-        assertEquals(taskManager.getHistory().get(0),task2);
+        assertEquals(taskManager.getHistory().get(0), task2);
     }
-
 
 
 }
