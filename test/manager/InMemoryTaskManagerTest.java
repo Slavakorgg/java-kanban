@@ -119,5 +119,30 @@ class InMemoryTaskManagerTest {
 
     }
 
+    @Test
+    void deleteId() {
+        Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.getTasks();
+        taskManager.deleteTask(2);
+
+        assertEquals(taskManager.getHistory().contains(task2), false);
+
+
+    }
+
+    @Test
+    void deleteSubtaskFromEpic() {
+        Epic epic1 = new Epic(1, "Test Epic", "Test epic description", Status.NEW);
+        Subtask subtask1 = new Subtask(2, "Subtask for epic1", "description", Status.NEW, epic1);
+        taskManager.createEpic(epic1);
+        taskManager.createSubtask(subtask1);
+        taskManager.deleteSubtask(2);
+        assertEquals(epic1.getSubtaskList().isEmpty(), false);
+
+    }
+
 
 }
