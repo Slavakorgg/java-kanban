@@ -104,7 +104,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private Status epicStatus(Epic epic) {
-        ArrayList<Status> statusList = new ArrayList<>();
+        List<Status> statusList = new ArrayList<>();
         for (Subtask subtask : epic.getSubtaskList().values()) {
             if (!statusList.contains(subtask.getStatus())) {
                 statusList.add(subtask.getStatus());

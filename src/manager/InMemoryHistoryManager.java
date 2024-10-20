@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private Node first;
     private Node last;
-    private HashMap<Integer, Node> history = new HashMap<>();
+    private Map<Integer, Node> history = new HashMap<>();
 
 
     public Node getFirst() {
@@ -97,7 +97,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>();
+        List<Task> result = new ArrayList<>();
         if (!history.isEmpty()) {
             Node currentNode = getFirst();
             while (currentNode.getNext() != null) {
@@ -121,7 +121,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     }
 
-    static class Node {
+   private static class Node {
         Node previous;
         Node next;
         Task value;
