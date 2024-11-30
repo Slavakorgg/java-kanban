@@ -39,7 +39,7 @@ public class FileBackedTaskManagerTest {
             fileBackedTaskManager.createSubtask(subtask2);
             fileBackedTaskManager.createSubtask(subtask3);
             List<String> newFile = Files.readAllLines(fileBackedTaskManager.getFile());
-            List<String> testFile = Files.readAllLines(Paths.get("test/manager/testFile.csv"));
+            List<String> testFile = Files.readAllLines(Paths.get("test/manager/TestFile.csv"));
             for (int i = 0; i < testFile.size(); i++) {
                 assertTrue(newFile.get(i).equals(testFile.get(i)), newFile.get(i) + " : " + testFile.get(i));
             }
