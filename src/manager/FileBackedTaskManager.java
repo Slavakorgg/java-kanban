@@ -77,7 +77,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(pathToFile))) {
 
-            bw.write("id,type,name,status,description,epic\n");
+            bw.write("id,type,name,description,status,epic\n");
             for (Task task : getTasks()) {
                 bw.write(toString(task) + "\n");
             }
@@ -97,43 +97,50 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public Task fromString(String value) {
         String[] mass = value.split(",");
+        int id = Integer.parseInt(mass[0]);
+        String type = mass[1];
+        String name = mass[2];
+        String description = mass[3];
+        String status = mass[4];
 
-        if (mass[1].equals("TASK")) {
-            Status status;
-            if (mass[4].equals("NEW")) {
-                status = Status.NEW;
-            } else if (mass[4].equals("DONE")) {
-                status = Status.DONE;
+
+        if (type.equals("TASK")) {
+            Status taskStatus;
+            if (status.equals("NEW")) {
+                taskStatus = Status.NEW;
+            } else if (status.equals("DONE")) {
+                taskStatus = Status.DONE;
             } else {
-                status = Status.IN_PROGRESS;
+                taskStatus = Status.IN_PROGRESS;
             }
-            Task task = new Task(Integer.parseInt(mass[0]), mass[2], mass[3], status);
+            Task task = new Task(id, name, description, taskStatus);
             task.setType(TaskType.TASK);
             createTask(task);
             return task;
-        } else if (mass[1].equals("EPIC")) {
-            Status status;
-            if (mass[4].equals("NEW")) {
-                status = Status.NEW;
-            } else if (mass[4].equals("DONE")) {
-                status = Status.DONE;
+        } else if (type.equals("EPIC")) {
+            Status taskStatus;
+            if (status.equals("NEW")) {
+                taskStatus = Status.NEW;
+            } else if (status.equals("DONE")) {
+                taskStatus = Status.DONE;
             } else {
-                status = Status.IN_PROGRESS;
+                taskStatus = Status.IN_PROGRESS;
             }
-            Epic epic = new Epic(Integer.parseInt(mass[0]), mass[2], mass[3], status);
+            Epic epic = new Epic(id, name, description, taskStatus);
             epic.setType(TaskType.EPIC);
             createEpic(epic);
             return epic;
         } else {
-            Status status;
-            if (mass[4].equals("NEW")) {
-                status = Status.NEW;
-            } else if (mass[4].equals("DONE")) {
-                status = Status.DONE;
+            Status taskStatus;
+            int epicId = Integer.parseInt(mass[5]);
+            if (status.equals("NEW")) {
+                taskStatus = Status.NEW;
+            } else if (status.equals("DONE")) {
+                taskStatus = Status.DONE;
             } else {
-                status = Status.IN_PROGRESS;
+                taskStatus = Status.IN_PROGRESS;
             }
-            Subtask subtask = new Subtask(Integer.parseInt(mass[0]), mass[2], mass[3], status, getEpic(Integer.parseInt(mass[5])));
+            Subtask subtask = new Subtask(id, name, description, taskStatus, getEpic(epicId));
             subtask.setType(TaskType.SUBTASK);
             createSubtask(subtask);
             return subtask;
@@ -143,16 +150,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory());
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory(),Paths.get(file.getPath()));
+        //теперь запись будет происходит в тот-же файл из которого была загрузка, а не в "file.csv"
         try {
             List<String> lines = Files.readAllLines(file.toPath());
-            for (String string : lines) {
-                if (!string.equals(lines.get(0))) {
-                    fileBackedTaskManager.fromString(string);
-                }
+            for (int i = 1; i < lines.size(); i++) {
+                fileBackedTaskManager.fromString(lines.get(i));
             }
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerLoadException(e);
         }
 
 
@@ -169,5 +176,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     }
 
+    public static class ManagerLoadException extends RuntimeException {
 
+
+        public ManagerLoadException(final Throwable cause) {
+            super(cause);
+        }
+
+
+    }
 }

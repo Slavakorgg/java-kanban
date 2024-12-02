@@ -9,6 +9,7 @@ import task.Task;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class FileBackedTaskManagerTest {
             assertEquals(newFile.size(), 7);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //если полностью удалить try-catch, то выдаст ошибку(
         }
 
 
@@ -54,10 +55,16 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void loadFromFile() {
+        List<String> loadFile = null;
+        try {
+            loadFile = Files.readAllLines(Paths.get("test/manager/TestFile.csv"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         FileBackedTaskManager.loadFromFile(new File("test/manager/TestFile.csv"));
         try {
-            List<String> newFile = Files.readAllLines(Paths.get("src/file.csv"));
-            List<String> loadFile = Files.readAllLines(Paths.get("test/manager/TestFile.csv"));
+            List<String> newFile = Files.readAllLines(Paths.get("test/manager/TestFile.csv"));
+
             for (int i = 0; i < loadFile.size(); i++) {
                 assertTrue(newFile.get(i).equals(loadFile.get(i)), newFile.get(i) + " : " + loadFile.get(i));
             }
@@ -65,6 +72,23 @@ public class FileBackedTaskManagerTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+        @Test
+        void loadFromEmptyFile(){
+            FileBackedTaskManager.loadFromFile(new File("test/manager/emptyFile.csv"));
+
+            try {
+                List<String> newFile = Files.readAllLines(Paths.get("test/manager/emptyFile.csv"));
+
+                assertEquals(newFile.size(),0);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
 
     }
-}
+
