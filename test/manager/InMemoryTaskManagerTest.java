@@ -7,6 +7,9 @@ import task.Status;
 import task.Subtask;
 import task.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
@@ -136,11 +139,59 @@ class InMemoryTaskManagerTest {
     @Test
     void deleteSubtaskFromEpic() {
         Epic epic1 = new Epic(1, "Test Epic", "Test epic description", Status.NEW);
-        Subtask subtask1 = new Subtask(2, "Subtask for epic1", "description", Status.NEW, epic1);
+        Subtask subtask1 = new Subtask(2, "Subtask for epic1", "description", Status.NEW, epic1, LocalDateTime.of(2024, 2, 10, 15, 40), Duration.ofMinutes(10));
         taskManager.createEpic(epic1);
         taskManager.createSubtask(subtask1);
         taskManager.deleteSubtask(2);
         assertEquals(epic1.getSubtaskList().isEmpty(), false);
+
+    }
+
+    @Test
+    void epicNewStatusTest() {
+        Epic epic1 = new Epic("Test Epic", "Test epic description");
+        Subtask subtask1 = new Subtask("Subtask-1 for epic1", "description", Status.NEW, epic1, LocalDateTime.of(2024, 2, 10, 15, 40), Duration.ofMinutes(10));
+        Subtask subtask2 = new Subtask("Subtask-2 for epic1", "description", Status.NEW, epic1, LocalDateTime.of(2024, 3, 10, 15, 40), Duration.ofMinutes(10));
+        taskManager.createEpic(epic1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+        assertEquals(epic1.getStatus(), Status.NEW);
+
+    }
+
+    @Test
+    void epicDoneStatusTest() {
+        Epic epic1 = new Epic("Test Epic", "Test epic description");
+        Subtask subtask1 = new Subtask("Subtask-1 for epic1", "description", Status.DONE, epic1, LocalDateTime.of(2024, 2, 10, 15, 40), Duration.ofMinutes(10));
+        Subtask subtask2 = new Subtask("Subtask-2 for epic1", "description", Status.DONE, epic1, LocalDateTime.of(2024, 3, 10, 15, 40), Duration.ofMinutes(10));
+        taskManager.createEpic(epic1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+        assertEquals(epic1.getStatus(), Status.DONE);
+
+    }
+
+    @Test
+    void epicMixedStatusTest() {
+        Epic epic1 = new Epic("Test Epic", "Test epic description");
+        Subtask subtask1 = new Subtask("Subtask-1 for epic1", "description", Status.NEW, epic1, LocalDateTime.of(2024, 2, 10, 15, 40), Duration.ofMinutes(10));
+        Subtask subtask2 = new Subtask("Subtask-2 for epic1", "description", Status.DONE, epic1, LocalDateTime.of(2024, 3, 10, 15, 40), Duration.ofMinutes(10));
+        taskManager.createEpic(epic1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+        assertEquals(epic1.getStatus(), Status.IN_PROGRESS);
+
+    }
+
+    @Test
+    void epicInProgressStatusTest() {
+        Epic epic1 = new Epic("Test Epic", "Test epic description");
+        Subtask subtask1 = new Subtask("Subtask-1 for epic1", "description", Status.IN_PROGRESS, epic1, LocalDateTime.of(2024, 2, 10, 15, 40), Duration.ofMinutes(10));
+        Subtask subtask2 = new Subtask("Subtask-2 for epic1", "description", Status.IN_PROGRESS, epic1, LocalDateTime.of(2024, 3, 10, 15, 40), Duration.ofMinutes(10));
+        taskManager.createEpic(epic1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+        assertEquals(epic1.getStatus(), Status.IN_PROGRESS);
 
     }
 

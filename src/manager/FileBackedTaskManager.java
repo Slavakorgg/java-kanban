@@ -1,5 +1,6 @@
 package manager;
 
+import exception.ManagerLoadException;
 import task.Epic;
 import task.Status;
 import task.Subtask;
@@ -13,6 +14,9 @@ import java.nio.file.Files;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -70,14 +74,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
 
     public String toString(Task task) {
-        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getDescription() + "," + task.getStatus();
+        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getDescription() + "," + task.getStatus() + "," + task.getStartTime() + "," + task.getDuration() + "," + task.getEndTime();
     }
 
 
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(pathToFile))) {
 
-            bw.write("id,type,name,description,status,epic\n");
+            bw.write("id,type,name,description,status,epic,start time, duration, end Time\n");
             for (Task task : getTasks()) {
                 bw.write(toString(task) + "\n");
             }
@@ -102,6 +106,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String name = mass[2];
         String description = mass[3];
         String status = mass[4];
+        LocalDateTime startTime = LocalDateTime.parse(mass[5]);
+        Duration duration = Duration.parse(mass[6]);
+        LocalDateTime endTime = LocalDateTime.parse(mass[7]);
 
 
         if (type.equals("TASK")) {
@@ -113,7 +120,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             } else {
                 taskStatus = Status.IN_PROGRESS;
             }
-            Task task = new Task(id, name, description, taskStatus);
+            Task task = new Task(id, name, description, taskStatus, startTime, duration);
             task.setType(TaskType.TASK);
             createTask(task);
             return task;
@@ -132,7 +139,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             return epic;
         } else {
             Status taskStatus;
-            int epicId = Integer.parseInt(mass[5]);
+            int epicId = Integer.parseInt(mass[8]);
             if (status.equals("NEW")) {
                 taskStatus = Status.NEW;
             } else if (status.equals("DONE")) {
@@ -140,7 +147,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             } else {
                 taskStatus = Status.IN_PROGRESS;
             }
-            Subtask subtask = new Subtask(id, name, description, taskStatus, getEpic(epicId));
+            Subtask subtask = new Subtask(id, name, description, taskStatus, getEpic(epicId), startTime, duration);
             subtask.setType(TaskType.SUBTASK);
             createSubtask(subtask);
             return subtask;
@@ -150,7 +157,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory(),Paths.get(file.getPath()));
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), Paths.get(file.getPath()));
         //теперь запись будет происходит в тот-же файл из которого была загрузка, а не в "file.csv"
         try {
             List<String> lines = Files.readAllLines(file.toPath());
@@ -176,7 +183,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     }
 
-    public static class ManagerLoadException extends RuntimeException {
+  /*  public static class ManagerLoadException extends RuntimeException {
 
 
         public ManagerLoadException(final Throwable cause) {
@@ -184,5 +191,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
 
 
-    }
+    }*/
 }
