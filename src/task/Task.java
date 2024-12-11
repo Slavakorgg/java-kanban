@@ -1,5 +1,7 @@
 package task;
 
+import manager.TaskType;
+
 import java.util.Objects;
 
 public class Task {
@@ -7,11 +9,14 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private TaskType type;
+
 
     public Task(String name, String descriprion, Status status) {
         this.name = name;
         this.description = descriprion;
         this.status = status;
+        this.type = TaskType.TASK;
     }
 
     public Task(Integer id, String name, String descriprion, Status status) {
@@ -19,6 +24,7 @@ public class Task {
         this.name = name;
         this.description = descriprion;
         this.status = status;
+        this.type = TaskType.TASK;
     }
 
     public void setId(Integer id) {
@@ -48,6 +54,14 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
+    }
+
+    public TaskType getType() {
+        return type;
     }
 
     public Integer getId() {
