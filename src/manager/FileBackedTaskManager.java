@@ -1,5 +1,6 @@
 package manager;
 
+import exception.IntersectionException;
 import exception.ManagerLoadException;
 import task.Epic;
 import task.Status;
@@ -45,7 +46,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
 
     @Override
-    public Task createTask(Task task) {
+    public Task createTask(Task task) throws IntersectionException {
         super.createTask(task);
 
         save();
@@ -63,7 +64,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Task createSubtask(Subtask subtask) {
+    public Task createSubtask(Subtask subtask) throws IntersectionException {
         super.createSubtask(subtask);
 
         save();
@@ -98,7 +99,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     }
 
-    public Task fromString(String value) {
+    public Task fromString(String value) throws IntersectionException {
         String[] mass = value.split(",");
         int id = Integer.parseInt(mass[0]);
         String type = mass[1];
@@ -155,7 +156,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) throws IntersectionException {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), Paths.get(file.getPath()));
         //теперь запись будет происходит в тот-же файл из которого была загрузка, а не в "file.csv"
         try {

@@ -1,5 +1,6 @@
 package manager;
 
+import exception.IntersectionException;
 import org.junit.jupiter.api.Test;
 import task.Status;
 
@@ -17,7 +18,7 @@ class InMemoryHistoryManagerTest {
 
 
     @Test
-    void HistoryManagerTest() {
+    void HistoryManagerTest() throws IntersectionException {
         List<Task> historyList = new ArrayList<>();
         Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
         Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
@@ -38,7 +39,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void HistoryManagerSizeTest() {
+    void HistoryManagerSizeTest() throws IntersectionException {
         Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
         Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
         taskManager.createTask(task1);
@@ -51,7 +52,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void LastTaskTest() {
+    void LastTaskTest() throws IntersectionException {
         Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
         Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
         Task task3 = new Task(3, "Task 3", "3-1", Status.NEW);
@@ -67,7 +68,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void FirstTaskTest() {
+    void FirstTaskTest() throws IntersectionException {
         Task task1 = new Task(1, "Task1", "1-1", Status.NEW);
         Task task2 = new Task(2, "Task 2", "2-1", Status.NEW);
         Task task3 = new Task(3, "Task 3", "3-1", Status.NEW);

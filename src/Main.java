@@ -1,3 +1,4 @@
+import exception.IntersectionException;
 import manager.*;
 import task.Epic;
 import task.Status;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IntersectionException {
 
         File file = new File("src/loadFile.csv");
         System.out.println(FileBackedTaskManager.loadFromFile(file).getHistory());

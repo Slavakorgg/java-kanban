@@ -92,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task createTask(Task task) {
+    public Task createTask(Task task) throws IntersectionException {
         taskIntersection(task);
 
 
@@ -104,7 +104,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task createSubtask(Subtask subtask) {
+    public Task createSubtask(Subtask subtask) throws IntersectionException {
         taskIntersection(subtask);
 
         subtask.setId(getNextId());
@@ -279,20 +279,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-    public boolean taskIntersection(Task newTask) {
+    public boolean taskIntersection(Task newTask) throws IntersectionException {
         if (newTask.getStartTime() == null || newTask.getDuration() == null) {
             return false;
         }
         boolean intersection = getPrioritizedTasks().stream()
                 .anyMatch(task -> newTask.getStartTime().isBefore(task.getEndTime()) && newTask.getEndTime().isAfter(task.getStartTime()));
-        ;
-        try {
-            if (intersection) {
-                throw new IntersectionException("Задача " + newTask.getName() + " пересекается с уже существующей");
-            }
-        } catch (IntersectionException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException();
+
+
+        if (intersection) {
+            throw new IntersectionException("Задача " + newTask.getName() + " пересекается с уже существующей");
         }
 
 

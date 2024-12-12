@@ -1,5 +1,6 @@
 package manager;
 
+import exception.IntersectionException;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileBackedTaskManagerTest {
     @Test
-    void saveInFile() throws IOException {
+    void saveInFile() throws IOException, IntersectionException {
 
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory(),
@@ -50,7 +51,7 @@ public class FileBackedTaskManagerTest {
 
 
     @Test
-    void loadFromFile() throws IOException {
+    void loadFromFile() throws IOException, IntersectionException {
         List<String> loadFile = null;
 
         loadFile = Files.readAllLines(Paths.get("test/manager/TestFile.csv"));
@@ -67,7 +68,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    void loadFromEmptyFile() throws IOException {
+    void loadFromEmptyFile() throws IOException, IntersectionException {
         FileBackedTaskManager.loadFromFile(new File("test/manager/emptyFile.csv"));
 
 
