@@ -16,7 +16,6 @@ public class Main {
         File file = new File("src/loadFile.csv");
         System.out.println(FileBackedTaskManager.loadFromFile(file).getHistory());
         FileBackedTaskManager taskManager = new FileBackedTaskManager(Managers.getDefaultHistory());
-        //  InMemoryTaskManager taskManager = new InMemoryTaskManager(Managers.getDefaultHistory());
         Epic epic1 = new Epic("Epic-1", "Epic-1", Status.IN_PROGRESS);
         Epic epic2 = new Epic("Epic-2", "Epic-2", Status.NEW);
         Task task1 = new Task("Task-1", "description for task-1", Status.NEW, LocalDateTime.of(2024, 3, 13, 14, 20), Duration.ofMinutes(10));
@@ -32,39 +31,14 @@ public class Main {
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
         taskManager.createSubtask(subtask3);
-        //    System.out.println(taskManager.getHistory());
         System.out.println(epic1);
         taskManager.deleteSubtask(4);
         System.out.println(epic1);
         System.out.println(taskManager.getHistory());
 
-       /* System.out.println(task1);
-        System.out.println(epic1.getSubtaskList());
-        System.out.println(epic1.getDuration());
-        System.out.println(epic1.getDuration());
-        System.out.println(epic1.getStartTime());
-        System.out.println(epic1.getEndTime());*/
+
         System.out.println(taskManager.getPrioritizedTasks());
 
-
-      /*  taskManager.getEpic(1);
-        System.out.println(taskManager.getHistory());
-        taskManager.getSubtask(3);
-        System.out.println(taskManager.getHistory());
-        taskManager.getSubtask(5);
-        System.out.println(taskManager.getHistory());
-        taskManager.getEpic(1);
-        System.out.println(taskManager.getHistory());
-        taskManager.deleteTask(4);
-        System.out.println(taskManager.getHistory());
-        taskManager.getSubtask(4);
-        System.out.println(taskManager.getHistory());
-        taskManager.getEpic(2);
-        System.out.println(taskManager.getHistory());
-        taskManager.deleteSubtask(4);
-        System.out.println(taskManager.getHistory());
-        taskManager.deleteEpic(1);
-        System.out.println(taskManager.getHistory());*/
 
     }
 

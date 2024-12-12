@@ -30,7 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
             return o1.getStartTime().compareTo(o2.getStartTime());
         }
     };
-    private TreeSet<Task> prioritizedTasks = new TreeSet<>(comparator);
+    private Set<Task> prioritizedTasks = new TreeSet<>(comparator);
 
     @Override
     public List<Task> getHistory() {
@@ -93,20 +93,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task createTask(Task task) {
-        if (taskIntersection(task)) {
-            throw new IntersectionException("Задача пересекается с уже существующей");
-        }
+        taskIntersection(task);
+
 
         task.setId(getNextId());
         tasks.put(task.getId(), task);
+
+
         return task;
     }
 
     @Override
     public Task createSubtask(Subtask subtask) {
-        if (taskIntersection(subtask)) {
-            throw new IntersectionException("Задача пересекается с уже существующей");
-        }
+        taskIntersection(subtask);
+
         subtask.setId(getNextId());
 
         subtasks.put(subtask.getId(), subtask);
@@ -120,6 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
             plusEpicDuration(subtask.getEpic(), subtask);
         }
         epicStatus(subtask.getEpic());
+
         return subtask;
     }
 
@@ -282,19 +283,25 @@ public class InMemoryTaskManager implements TaskManager {
         if (newTask.getStartTime() == null || newTask.getDuration() == null) {
             return false;
         }
-        List<Task> intersectionList = getPrioritizedTasks().stream()
-                .filter(task1 -> newTask.getStartTime().isBefore(task1.getEndTime()) && newTask.getEndTime().isAfter(task1.getStartTime()))
-                .collect(Collectors.toList());
-        if (!intersectionList.isEmpty()) {
-            return true;
+        boolean intersection = getPrioritizedTasks().stream()
+                .anyMatch(task -> newTask.getStartTime().isBefore(task.getEndTime()) && newTask.getEndTime().isAfter(task.getStartTime()));
+        ;
+        try {
+            if (intersection) {
+                throw new IntersectionException("Задача " + newTask.getName() + " пересекается с уже существующей");
+            }
+        } catch (IntersectionException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException();
         }
 
-        return false;
+
+        return intersection;
 
 
     }
 
-    public TreeSet<Task> getPrioritizedTasks() {
+    public Set<Task> getPrioritizedTasks() {
         List<Task> allTasks = new ArrayList<>();
         allTasks.addAll(getTasks());
         allTasks.addAll(getSubtasks());

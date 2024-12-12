@@ -195,5 +195,20 @@ class InMemoryTaskManagerTest {
 
     }
 
+    @Test
+    public void intersectionTest() {
+        Task task1 = new Task("Task-1", "description", Status.NEW, LocalDateTime.of(2024, 12, 12, 10, 0), Duration.ofMinutes(600));
+        Task task2 = new Task("Task-2", "description", Status.NEW, LocalDateTime.of(2024, 12, 12, 10, 10), Duration.ofMinutes(10));
 
+        assertThrows(RuntimeException.class, () -> {
+            taskManager.createTask(task1);
+            taskManager.createTask(task2);
+
+
+        });
+
+    }
 }
+
+
+
