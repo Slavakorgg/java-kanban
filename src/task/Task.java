@@ -2,6 +2,9 @@ package task;
 
 import manager.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -10,7 +13,33 @@ public class Task {
     private String description;
     private Status status;
     private TaskType type;
+    private LocalDateTime startTime;
+    private Duration duration;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null) {
+            return startTime.plus(duration);
+        }
+        return null;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
 
     public Task(String name, String descriprion, Status status) {
         this.name = name;
@@ -19,12 +48,32 @@ public class Task {
         this.type = TaskType.TASK;
     }
 
+
     public Task(Integer id, String name, String descriprion, Status status) {
         this.id = id;
         this.name = name;
         this.description = descriprion;
         this.status = status;
         this.type = TaskType.TASK;
+    }
+
+    public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.type = TaskType.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(Integer id, String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.type = TaskType.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public void setId(Integer id) {
@@ -85,8 +134,12 @@ public class Task {
         return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", descriprion='" + description + '\'' +
+                ", description='" + description + '\'' +
                 ", status=" + status +
+                ", type=" + type +
+                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")) +
+                ", duration=" + duration +
                 '}';
     }
+
 }

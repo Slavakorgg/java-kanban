@@ -1,14 +1,17 @@
 package manager;
 
+import exception.IntersectionException;
 import task.Epic;
 import task.Status;
 import task.Subtask;
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks = new HashMap<>();
@@ -19,6 +22,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     public InMemoryTaskManager(HistoryManager defaultHistory) {
     }
+
+    Comparator<Task> comparator = new Comparator<Task>() {
+        @Override
+        public int compare(Task o1, Task o2) {
+
+            return o1.getStartTime().compareTo(o2.getStartTime());
+        }
+    };
+    private Set<Task> prioritizedTasks = new TreeSet<>(comparator);
 
     @Override
     public List<Task> getHistory() {
@@ -80,25 +92,43 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task createTask(Task task) {
+    public Task createTask(Task task) throws IntersectionException {
+        taskIntersection(task);
+
 
         task.setId(getNextId());
         tasks.put(task.getId(), task);
+
+
         return task;
     }
 
     @Override
-    public Task createSubtask(Subtask subtask) {
+    public Task createSubtask(Subtask subtask) throws IntersectionException {
+        taskIntersection(subtask);
+
         subtask.setId(getNextId());
+
         subtasks.put(subtask.getId(), subtask);
         subtask.getEpic().getSubtaskList().put(subtask.getId(), subtask);
+        if (subtask.getStartTime() != null) { //для создания сабтасок без времени в конструкторе.
+            // Может есть смысл в принципе убрать возможность создавать таски без времени, но пока не уверен
+            updateStartTimeForEpic(subtask.getEpic());
+
+        }
+        if (subtask.getDuration() != null) {  //для создания сабтасок без времени в конструкторе
+            plusEpicDuration(subtask.getEpic(), subtask);
+        }
         epicStatus(subtask.getEpic());
+
         return subtask;
     }
 
     @Override
     public Task createEpic(Epic epic) {
         epic.setId(getNextId());
+        epic.setStartTime(LocalDateTime.of(2024, 1, 1, 0, 0)); // у меня сначала создаётся эпик, а потом уже сабтаски.
+        // Поэтому старт тайм эпика сделал таким, чтоб он не был null. При добавлении первой сабтаски с временем старттайм изменится.
         epics.put(epic.getId(), epic);
         return epic;
     }
@@ -137,6 +167,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
         subtasks.put(subtaskId, subtask);
         subtask.getEpic().getSubtaskList().put(subtask.getId(), subtask);
+        if (subtask == firsSubtaskFromEpic(subtask.getEpic())) {
+            updateStartTimeForEpic(subtask.getEpic());
+        }
 
         epicStatus(subtask.getEpic());
 
@@ -186,6 +219,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (historyManager.getTasks().contains(subtasks.get(taskId))) {
             historyManager.remove(taskId);
         }
+        if (subtasks.get(taskId) == firsSubtaskFromEpic(subtasks.get(taskId).getEpic())) {
+            updateStartTimeForEpic(subtasks.get(taskId).getEpic());
+        }
+        minusEpicDuration(subtasks.get(taskId).getEpic(), subtasks.get(taskId));
 
 
         subtasks.remove(taskId);
@@ -194,12 +231,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean deleteEpic(int taskId) {
-        // historyManager.remove(taskId);
+
         if (!epics.containsKey(taskId)) {
             return false;
         }
+
+
         for (Subtask subtask : getEpic(taskId).getSubtaskList().values()) {
-            //   historyManager.remove(taskId);
+
             deleteSubtask(subtask.getId());
         }
         if (historyManager.getTasks().contains(epics.get(taskId))) {
@@ -208,6 +247,69 @@ public class InMemoryTaskManager implements TaskManager {
         epics.remove(taskId);
         return true;
     }
+
+    public Subtask firsSubtaskFromEpic(Epic epic) {
+        List<Subtask> subtaskList = new ArrayList<>();
+        for (Subtask subtask : epic.getSubtaskList().values()) {
+            subtaskList.add(subtask);
+        }
+        return subtaskList.getFirst();
+
+    }
+
+    public void plusEpicDuration(Epic epic, Subtask subtask) {
+        Duration duration = epic.getDuration().plus(subtask.getDuration());
+        epic.setDuration(duration);
+
+    }
+
+    public void minusEpicDuration(Epic epic, Subtask subtask) {
+        Duration duration = epic.getDuration().minus(subtask.getDuration());
+        epic.setDuration(duration);
+    }
+
+    public void updateStartTimeForEpic(Epic epic) {
+        if (!epic.getSubtaskList().isEmpty()) {
+
+            LocalDateTime startTime = firsSubtaskFromEpic(epic).getStartTime();
+            epic.setStartTime(startTime);
+        }
+
+
+    }
+
+
+    public boolean taskIntersection(Task newTask) throws IntersectionException {
+        if (newTask.getStartTime() == null || newTask.getDuration() == null) {
+            return false;
+        }
+        boolean intersection = getPrioritizedTasks().stream()
+                .anyMatch(task -> newTask.getStartTime().isBefore(task.getEndTime()) && newTask.getEndTime().isAfter(task.getStartTime()));
+
+
+        if (intersection) {
+            throw new IntersectionException("Задача " + newTask.getName() + " пересекается с уже существующей");
+        }
+
+
+        return intersection;
+
+
+    }
+
+    public Set<Task> getPrioritizedTasks() {
+        List<Task> allTasks = new ArrayList<>();
+        allTasks.addAll(getTasks());
+        allTasks.addAll(getSubtasks());
+        List<Task> notNullTasks = allTasks
+                .stream()
+                .filter(task -> task.getStartTime() != null)
+                .collect(Collectors.toList());
+        prioritizedTasks.addAll(notNullTasks);
+        return prioritizedTasks;
+
+    }
+
 
     @Override
     public int getNextId() {

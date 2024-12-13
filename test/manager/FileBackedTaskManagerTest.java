@@ -1,5 +1,6 @@
 package manager;
 
+import exception.IntersectionException;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
@@ -10,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,19 +20,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileBackedTaskManagerTest {
     @Test
-    void saveInFile() throws IOException {
+    void saveInFile() throws IOException, IntersectionException {
 
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getDefaultHistory(),
                 Files.createTempFile("testFile", ".csv"));
         Epic epic1 = new Epic("Epic-1", "Epic-1", Status.IN_PROGRESS);
         Epic epic2 = new Epic("Epic-2", "Epic-2", Status.NEW);
-        Task task1 = new Task("Task-1", "description for task-1", Status.NEW);
+        Task task1 = new Task("Task-1", "description for task-1", Status.NEW, LocalDateTime.of(2024, 1, 13, 14, 20), Duration.ofMinutes(10));
 
 
-        Subtask subtask1 = new Subtask("Subtask-1", "Subtask-1 for Epic-1", Status.DONE, epic1);
-        Subtask subtask2 = new Subtask("Subtask-2", "Subtask-2 for Epic-1", Status.IN_PROGRESS, epic1);
-        Subtask subtask3 = new Subtask("Subtask-3", "Subtask-3 for Epic-1", Status.NEW, epic1);
+        Subtask subtask1 = new Subtask("Subtask-1", "Subtask-1 for Epic-1", Status.DONE, epic1, LocalDateTime.of(2024, 2, 10, 15, 40), Duration.ofMinutes(10));
+        Subtask subtask2 = new Subtask("Subtask-2", "Subtask-2 for Epic-1", Status.IN_PROGRESS, epic1, LocalDateTime.of(2024, 2, 24, 22, 5), Duration.ofMinutes(10));
+        Subtask subtask3 = new Subtask("Subtask-3", "Subtask-3 for Epic-1", Status.NEW, epic1, LocalDateTime.of(2024, 3, 5, 10, 0), Duration.ofMinutes(10));
         fileBackedTaskManager.createTask(task1);
         fileBackedTaskManager.createEpic(epic1);
         fileBackedTaskManager.createEpic(epic2);
@@ -48,7 +51,7 @@ public class FileBackedTaskManagerTest {
 
 
     @Test
-    void loadFromFile() throws IOException {
+    void loadFromFile() throws IOException, IntersectionException {
         List<String> loadFile = null;
 
         loadFile = Files.readAllLines(Paths.get("test/manager/TestFile.csv"));
@@ -65,7 +68,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    void loadFromEmptyFile() throws IOException {
+    void loadFromEmptyFile() throws IOException, IntersectionException {
         FileBackedTaskManager.loadFromFile(new File("test/manager/emptyFile.csv"));
 
 

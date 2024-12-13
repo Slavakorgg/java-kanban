@@ -1,5 +1,6 @@
 package manager;
 
+import exception.IntersectionException;
 import task.Epic;
 
 import task.Subtask;
@@ -28,9 +29,9 @@ public interface TaskManager {
 
     HashMap<Integer, Subtask> getSubtasksFromEpic(Epic epic);
 
-    Task createTask(Task task);
+    Task createTask(Task task) throws IntersectionException;
 
-    Task createSubtask(Subtask subtask);
+    Task createSubtask(Subtask subtask) throws IntersectionException;
 
     Task createEpic(Epic epic);
 
