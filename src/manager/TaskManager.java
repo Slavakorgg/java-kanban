@@ -9,6 +9,7 @@ import task.Task;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 
 public interface TaskManager {
@@ -35,7 +36,7 @@ public interface TaskManager {
 
     Task createEpic(Epic epic);
 
-    Task updateTask(Task task);
+    Task updateTask(Task task) throws IntersectionException;
 
     Subtask updateSubtask(Subtask subtask);
 
@@ -53,6 +54,8 @@ public interface TaskManager {
     boolean deleteEpic(int taskId);
 
     int getNextId();
+
+    Set<Task> getPrioritizedTasks();
 
 }
 

@@ -150,7 +150,8 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public Task updateTask(Task task) {
+    public Task updateTask(Task task) throws IntersectionException {
+        taskIntersection(task);
         Integer taskId = task.getId();
         if (taskId == null || !tasks.containsKey(taskId)) {
             return null;
