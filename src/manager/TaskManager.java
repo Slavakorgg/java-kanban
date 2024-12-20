@@ -54,6 +54,7 @@ public interface TaskManager {
     boolean deleteEpic(int taskId);
 
     int getNextId();
+
     Set<Task> getPrioritizedTasks();
 
 }
