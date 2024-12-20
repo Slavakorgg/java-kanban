@@ -1,20 +1,35 @@
-import exception.IntersectionException;
-import manager.*;
-import task.Epic;
-import task.Status;
-import task.Subtask;
-import task.Task;
 
-import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
+
+import exception.IntersectionException;
+
+
+import java.io.IOException;
 
 
 public class Main {
 
-    public static void main(String[] args) throws IntersectionException {
+    public static void main(String[] args) throws IntersectionException, IOException, InterruptedException {
 
-        File file = new File("src/loadFile.csv");
+        // Я не могу понять в чём ошибка. Пишет Failed making field 'java.time.format.DateTimeFormatter#printerParser' accessible.
+        // Вроде DateTimeAdapter написан правильно и подключил его к gson...
+
+
+        /* TaskManager taskManager = new InMemoryTaskManager(Managers.getDefaultHistory());
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        Gson gson = httpTaskServer.getGson();
+        Task task = new Task("Test 2", "Testing task 2",
+                        Status.NEW);
+        String taskJson = gson.toJson(task);
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response); */
+
+
+
+
+          /* File file = new File("src/loadFile.csv");
         System.out.println(FileBackedTaskManager.loadFromFile(file).getHistory());
         FileBackedTaskManager taskManager = new FileBackedTaskManager(Managers.getDefaultHistory());
         Epic epic1 = new Epic("Epic-1", "Epic-1", Status.IN_PROGRESS);
@@ -36,9 +51,8 @@ public class Main {
         taskManager.deleteSubtask(4);
         System.out.println(epic1);
         System.out.println(taskManager.getHistory());
-
-
-        System.out.println(taskManager.getPrioritizedTasks());
+        System.out.println(task1);
+        System.out.println(taskManager.getPrioritizedTasks());*/
 
 
     }

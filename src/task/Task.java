@@ -131,14 +131,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", type=" + type +
-                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")) +
-                ", duration=" + duration +
+        return "ModelTask.Task{" +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() + '\'' +
+                ", duration=" + getDuration() + '\'' +
+                ", startTime=" + getStartTime() + '\'' +
                 '}';
     }
 
